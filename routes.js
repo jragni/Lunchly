@@ -38,6 +38,7 @@ router.get("/:id/", async function (req, res, next) {
   const customer = await Customer.get(req.params.id);
 
   const reservations = await customer.getReservations();
+  console.log(reservations[0].customerId)
 
   return res.render("customer_detail.html", { customer, reservations });
 });
@@ -81,5 +82,28 @@ router.post("/:id/add-reservation/", async function (req, res, next) {
 
   return res.redirect(`/${customerId}/`);
 });
+
+/**show form to edit a reservation */
+router.get("/reservation/:id/edit/", async function (req, res, next) {
+    const reservation = await Reservation.get(req.params.id);
+    console.log(reservation.customerId)
+    res.render("reservation_edit.html", { reservation });
+  });
+  
+  /** Handle editing a customer. */
+  
+  router.post("/reservation/:id/edit/", async function (req, res, next) {
+    
+    const reservation = await Reservation.get(req.params.id);
+    reservation.customerId = reservation.customerId
+    reservation.numGuests = req.body.numGuests;
+    reservation.startAt = req.body.startAt;
+    reservation.notes = req.body.notes;
+  
+    await reservation.save();
+  
+    return res.redirect(`/${reservation.customerId}/`);
+  });
+  
 
 module.exports = router;

@@ -25,6 +25,31 @@ class Reservation {
 
   /** given a customer id, find their reservations. */
 
+  static async get(id) {
+    const results = await db.query(
+            `SELECT id,
+            customer_id AS "customerId",
+            num_guests AS "numGuests",
+            start_at AS "startAt",
+            notes AS "notes"
+            FROM reservations
+            WHERE id = $1`,
+
+        [id],
+    );
+
+    const reservation = results.rows[0];
+
+    if (reservation === undefined) {
+      const err = new Error(`No such customer: ${id}`);
+      err.status = 404;
+      throw err;
+    }
+
+    return new Reservation(reservation);
+  }
+
+
   static async getReservationsForCustomer(customerId) {
     const results = await db.query(
           `SELECT id,
@@ -55,7 +80,7 @@ class Reservation {
             `UPDATE reservations
              SET customer_id=$1,
                  num_guests=$2,
-                 startAt=$3,
+                 start_at=$3,
                  notes=$4
              WHERE id = $5
           `, [      // NOTE:   RETURNING customer_id, num_guests, startAt, notes added RETURNING for future implementation
