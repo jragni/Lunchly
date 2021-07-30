@@ -34,7 +34,7 @@ class Customer {
 
   /** get a customer by ID. */
 
-  static async get(id) {
+    static async get(id) {
     const results = await db.query(
           `SELECT id,
                   first_name AS "firstName",
@@ -96,7 +96,7 @@ class Customer {
     return this.firstName + " " + this.lastName;
   }
 
-  async search(name) {
+  static async search(name) {
       
       const results = await db.query(
         `SELECT first_name "firstName",
@@ -104,11 +104,33 @@ class Customer {
                 id,
                 notes
          FROM customers
-         WHERE first_name LIKE %$1% OR last_name LIKE %$1%
-        `, [name]
+         WHERE first_name ILIKE $1 OR last_name ILIKE $1
+        `, [`%${name}%`]
       );
       return results.rows.map(c => new Customer(c));
   }
+
+  static async bestCustomers(name) {
+
+    const results = await db.query(
+      `SELECT    
+              first_name AS "firstName" , 
+              last_name AS "lastName", 
+              customers.id AS id,
+              customers.notes AS notes
+       
+      FROM customers JOIN reservations
+      ON reservations.customer_id = customers.id
+      GROUP BY customers.id
+      ORDER BY count(*) DESC
+      LIMIT 10
+     `
+    );
+ 
+    return results.rows.map(c => new Customer(c));
+  }
+
+
 }
 
 module.exports = Customer;;

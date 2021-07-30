@@ -9,6 +9,23 @@ const Reservation = require("./models/reservation");
 
 const router = new express.Router();
 
+
+router.get('/customers', async function (req, res, next) {
+
+    const name = req.query.search;
+    const customers = await Customer.search(name);
+    return res.render('customer_list.html', {customers}  )
+});
+
+router.get('/best', async function (req, res, next) {
+  
+    const customers = await Customer.bestCustomers();
+    
+
+    return res.render('customer_list.html', {customers}  )
+});
+
+
 /** Homepage: show list of customers. */
 
 router.get("/", async function (req, res, next) {
@@ -105,13 +122,8 @@ router.get("/reservation/:id/edit/", async function (req, res, next) {
     return res.redirect(`/${reservation.customerId}/`);
   });
   
-  router.get('/customers', async function (req, res, next) {
-    console.log('MAAAAADE IT ---------------')
 
-    const name = req.query.search;
-    const customers = await Customer.search(name);
-    console.log(customers, '-----------------------------CUSTOMERS-----');
-    return res.render('customer_list.html', {customers} )
-  });
+
+
 
 module.exports = router;
