@@ -105,5 +105,13 @@ router.get("/reservation/:id/edit/", async function (req, res, next) {
     return res.redirect(`/${reservation.customerId}/`);
   });
   
+  router.get('/customers', async function (req, res, next) {
+    console.log('MAAAAADE IT ---------------')
+
+    const name = req.query.search;
+    const customers = await Customer.search(name);
+    console.log(customers, '-----------------------------CUSTOMERS-----');
+    return res.render('customer_list.html', {customers} )
+  });
 
 module.exports = router;

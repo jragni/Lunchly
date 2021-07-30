@@ -96,6 +96,19 @@ class Customer {
     return this.firstName + " " + this.lastName;
   }
 
+  async search(name) {
+      
+      const results = await db.query(
+        `SELECT first_name "firstName",
+                last_name AS "lastName", 
+                id,
+                notes
+         FROM customers
+         WHERE first_name LIKE %$1% OR last_name LIKE %$1%
+        `, [name]
+      );
+      return results.rows.map(c => new Customer(c));
+  }
 }
 
-module.exports = Customer;
+module.exports = Customer;;

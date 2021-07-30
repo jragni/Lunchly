@@ -23,6 +23,10 @@ class Reservation {
     return moment(this.startAt).format("MMMM Do YYYY, h:mm a");
   }
 
+  /** formatter for startAt fields*/
+  getInputStartAt(){
+    return moment(this.startAt).format("YYYY/MM/d, h:mm a");
+  }
   /** given a customer id, find their reservations. */
 
   static async get(id) {

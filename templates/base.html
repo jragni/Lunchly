@@ -10,7 +10,7 @@
 <body>
 
 <div class="container-fixed">
-
+  <!-- Nav bar -->
   <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
     <a class="navbar-brand" href="/">Lunch.ly</a>
     <button class="navbar-toggler"
@@ -34,6 +34,12 @@
         </li>
       </ul>
     </div>
+    <!-- Search Bar -->
+    <!-- TODO: add action to route to a search page -->
+    <form class="d-flex" method="GET" action="/customers"> 
+      <input class="form-control me-sm-2" name="search" type="text" placeholder="Search">
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+    </form>
   </nav>
 
 </div>
